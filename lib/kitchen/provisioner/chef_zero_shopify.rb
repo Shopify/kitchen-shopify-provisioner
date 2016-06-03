@@ -5,12 +5,11 @@ require 'chef/role'
 module Kitchen
   module Provisioner
 
-    # This Provisioner combines the roles of the Apt, Ruby Roles, and ChefZero
-    # provisioners, to ensure a server is ready to run before ChefZero starts its magic
-    # Must be named "Chef..." otherwise TestKitchen won't understand that we intend to use chef
+    # We'll sneak some code in before the default chef zero provisioner runs
+    # This will allow us to convert our roles to JSON, and flatten at once
     class ChefZeroShopify < ChefZero
       def create_sandbox
-        tmpdir = Dir.mktmpdir
+        tmpdir = Dir.mktmpdir('chef-flattened-roles')
 
         at_exit do
           FileUtils.rm_rf(tmpdir)
