@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_runtime_dependency 'chef',         ['~> 12']
-  s.add_runtime_dependency 'test-kitchen', ['~> 1.9']
+  s.add_runtime_dependency 'test-kitchen', ['~> 1.7']
   s.add_development_dependency 'rspec', ['~> 3.4']
   s.add_development_dependency 'rake', ['~> 10.4']
 end
