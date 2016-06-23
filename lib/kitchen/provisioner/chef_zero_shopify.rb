@@ -17,8 +17,9 @@ module Kitchen
           FileUtils.rm_rf(tmpdir)
         end
 
-        flatten_roles(config, tmpdir) unless config[:roles_path].nil?
-        decrypt_data_bags(config, tmpdir) unless config[:data_bags_path].nil?
+        flatten_roles(config, tmpdir) if config[:roles_path]
+        write_data_bag_key(config, tmpdir) if config[:data_bag_secret] && config[:encrypted_data_bag_secret_key_path]
+        decrypt_data_bags(config, tmpdir) if config[:data_bags_path]
         super
       rescue => e
         puts e.message
@@ -42,6 +43,12 @@ module Kitchen
         end
 
         config[:roles_path] = flat_roles
+      end
+
+      def write_data_bag_key(config, tmpdir)
+        path = File.join(tmpdir, 'encrypted_data_bag_secret')
+        File.write(path, config[:data_bag_secret].strip)
+        config[:encrypted_data_bag_secret_key_path] = path
       end
 
       def decrypt_data_bags(config, tmpdir)
