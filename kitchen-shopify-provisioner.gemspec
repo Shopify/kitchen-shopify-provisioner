@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.homepage    = 'https://github.com/shopify/kitchen-shopify-provisioner'
 
-  s.files         = `git ls-files`.split($/)
-  s.test_files    = s.files.grep(%r{spec})
+  s.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
+  s.test_files    = s.files.grep(/spec/)
   s.require_paths = ['lib']
 
   s.add_runtime_dependency 'chef',         ['~> 12']
