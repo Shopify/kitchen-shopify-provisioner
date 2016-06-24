@@ -5,6 +5,9 @@ require 'chef/data_bag_item'
 require 'chef/encrypted_data_bag_item'
 require 'chef/encrypted_data_bag_item/check_encrypted'
 
+# UGH
+require 'kitchen-shopify-provisioner/databag_mash_monkeypatch'
+
 module Kitchen
   module Provisioner
     # We'll sneak some code in before the default chef zero provisioner runs
@@ -62,7 +65,10 @@ module Kitchen
           files.each do |item_file|
             raw_data = ::Chef::JSONCompat.from_json(IO.read(item_file))
             raw_data = ::Chef::EncryptedDataBagItem.new(raw_data, secret).to_hash if encrypted_data_bag?(raw_data)
-            json_dump = ::Chef::JSONCompat.to_json_pretty(raw_data)
+            item = ::Chef::DataBagItem.new
+            item.data_bag(bag_name)
+            item.raw_data = raw_data
+            json_dump = ::Chef::JSONCompat.to_json_pretty(item)
             plain_file = File.join(plain_data_bags, bag_name, File.basename(item_file))
             FileUtils.mkdir_p(File.dirname(plain_file))
             File.write(plain_file, json_dump)
