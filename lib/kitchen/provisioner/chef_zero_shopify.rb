@@ -5,6 +5,9 @@ require 'chef/data_bag_item'
 require 'chef/encrypted_data_bag_item'
 require 'chef/encrypted_data_bag_item/check_encrypted'
 
+# UGH
+require 'kitchen-shopify-provisioner/databag_mash_monkeypatch'
+
 module Kitchen
   module Provisioner
     # We'll sneak some code in before the default chef zero provisioner runs
