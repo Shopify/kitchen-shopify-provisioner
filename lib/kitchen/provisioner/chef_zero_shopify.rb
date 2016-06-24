@@ -62,7 +62,10 @@ module Kitchen
           files.each do |item_file|
             raw_data = ::Chef::JSONCompat.from_json(IO.read(item_file))
             raw_data = ::Chef::EncryptedDataBagItem.new(raw_data, secret).to_hash if encrypted_data_bag?(raw_data)
-            json_dump = ::Chef::JSONCompat.to_json_pretty(raw_data)
+            item = ::Chef::DataBagItem.new
+            item.data_bag(bag_name)
+            item.raw_data = raw_data
+            json_dump = ::Chef::JSONCompat.to_json_pretty(item)
             plain_file = File.join(plain_data_bags, bag_name, File.basename(item_file))
             FileUtils.mkdir_p(File.dirname(plain_file))
             File.write(plain_file, json_dump)
